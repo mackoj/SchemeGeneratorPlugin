@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mackoj/SchemeGenerator.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "ad98c95d3e1a31e1d91f8fc3d0d3904fadd570ce"
+        "revision" : "07a8022ab0a2ed7b51529f7464e4c0cd153c3d1c",
+        "version" : "0.1.0"
       }
     },
     {
