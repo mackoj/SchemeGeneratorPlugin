@@ -10,13 +10,13 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.2"),
-    .package(url: "https://github.com/mackoj/SchemeGenerator.git", from: "0.1.0"),
+    .package(url: "https://github.com/mackoj/SchemeGenerator.git", branch: "main"),
   ],
   targets: [
     .binaryTarget(
       name: "scheme-generator",
-      url: "https://github.com/mackoj/GenerateSchemes/releases/download/0.1.0/scheme-generator.zip",
-      checksum: "86589bee4f6212446f6fa646d0fd8b874bf7c5fac079637aad40f71c9583876a"
+      url: "https://github.com/mackoj/SchemeGenerator/releases/download/0.1.0/scheme-generator.zip",
+      checksum: "d0838f6362b934eaab20f63fe6f3265a80fbad2123f58b2517ac89642eda111f"
     ),
     .plugin(
       name: "SchemeGeneratorPlugin",

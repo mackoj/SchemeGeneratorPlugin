@@ -32,8 +32,6 @@ struct SchemeGeneratorPlugin: CommandPlugin {
       context: context,
       arguments: [
         "--configuration-file-url \"\(configurationFileURL.path)\"",
-        "--package-directory \"\(packageDirectory.path)\"",
-        "--plugin-temporary-directory \"\(packageTempFolder.path)\"",
         "--product-names-file-url \"\(productNamesFileURL.path)\"",
       ]
     )
