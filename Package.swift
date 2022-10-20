@@ -20,19 +20,25 @@ let package = Package(
     ),
     .plugin(
       name: "SchemeGeneratorPlugin",
+      //      capability: .command(intent: .sourceCodeFormatting()),
       capability: .command(
-        intent: .custom(verb: "Verb", description: "Description"),
-        permissions: [.writeToPackageDirectory(reason: "This plug-in need to update the scheme in the schemesDirectory folder definied in the configuration file.")]
+        intent: .custom(
+          verb: "Je ne sais pas vraiment quoi mettre ici",
+          description: "Je ne sais pas vraiment quoi mettre ici non plus"
+        ),
+        permissions: [
+          .writeToPackageDirectory(reason: "This plug-in need to update the scheme in the schemesDirectory folder definied in the configuration file."),
+        ]
       ),
       dependencies: [
         .target(name: "scheme-generator")
       ]
     ),
-//    .testTarget(
-//      name: "SchemeGeneratorPluginTests",
-//      dependencies: [
-//        "SchemeGeneratorPlugin"
-//      ]
-//    ),
+    //    .testTarget(
+    //      name: "SchemeGeneratorPluginTests",
+    //      dependencies: [
+    //        "SchemeGeneratorPlugin"
+    //      ]
+    //    ),
   ]
 )

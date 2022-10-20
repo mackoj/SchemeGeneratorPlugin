@@ -6,12 +6,14 @@ import CryptoKit
 struct SchemeGeneratorPlugin: CommandPlugin {
   func performCommand(context: PackagePlugin.PluginContext, arguments: [String]) async throws {
     let productNames = context.package.products.map(\.name)
-    var packageTempFolder = URL(fileURLWithPath: context.pluginWorkDirectory.string)
+    let packageTempFolder = URL(fileURLWithPath: context.pluginWorkDirectory.string)
     let packageDirectory = URL(fileURLWithPath: context.package.directory.string)
     let configurationFileURL = packageDirectory.appendingPathComponent("scheme_generator.yaml")
+    
     if FileManager.default.fileExists(atPath: configurationFileURL.path) == false {
       Diagnostics.emit(.error, "Please add a configuration file at \(configurationFileURL.path)")
     }
+    
     guard let data = productNames
       .joined(separator: "\n")
       .data(using: .utf8)
