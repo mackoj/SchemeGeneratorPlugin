@@ -15,8 +15,8 @@ let package = Package(
   targets: [
     .binaryTarget(
       name: "scheme-generator",
-      url: "https://github.com/mackoj/SchemeGenerator/releases/download/0.1.0/scheme-generator.zip",
-      checksum: "d0838f6362b934eaab20f63fe6f3265a80fbad2123f58b2517ac89642eda111f"
+      url: "https://github.com/mackoj/SchemeGenerator/releases/download/0.3.0/scheme-generator.zip",
+      checksum: "6002c6bb6730c58af2a683bbe8d5e949d54528b932271608fd53ff193e5ef814"
     ),
     .plugin(
       name: "SchemeGeneratorPlugin",
