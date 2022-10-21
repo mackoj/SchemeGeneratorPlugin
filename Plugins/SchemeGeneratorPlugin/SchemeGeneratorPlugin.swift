@@ -8,7 +8,8 @@ struct SchemeGeneratorPlugin: CommandPlugin {
     let productNames = context.package.products.map(\.name)
     let packageTempFolder = URL(fileURLWithPath: context.pluginWorkDirectory.string)
     let packageDirectory = URL(fileURLWithPath: context.package.directory.string)
-    let configurationFileName = (arguments.first != nil && arguments.first!.isEmpty == false) ? arguments.first! : "conf_scheme_generator.json"
+    let remainingArguments = ArgumentExtractor(arguments).remainingArguments
+    let configurationFileName = (remainingArguments.first != nil && remainingArguments.first!.isEmpty == false) ? remainingArguments.first! : "conf_scheme_generator.json"
     let configurationFileURL = packageDirectory.appendingPathComponent(configurationFileName)
     
     if FileManager.default.fileExists(atPath: configurationFileURL.path) == false {
