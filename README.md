@@ -8,20 +8,23 @@ This is very usefull when using TCA or any SPM based project.
 Add to your dependencies `.package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.4.2"),`.
 
 To use it you have to set a configuration file at the root of your project named `conf_scheme_generator.json`.
-This file contain.
+This file contain theses keys:
+- schemesDirectory: A string that represent where the schemes will be saved
+- removeNotGeneratedSchemes: A bool that represent if it should remove schemes that are no longer in Package.swift
+- overwriteAlreadyGeneratedSchemes: A bool that represent if it should force the overwrite of schemes already present scheme
+- verbose: A bool that represent if it should print more information in the console
 ```json
 {
-  # Where the schemes will be saved
   "schemesDirectory": "",
-  # Remove schemes that are not in the Package.swift anymore
   "removeNotGeneratedSchemes": true,
-  # Force the overwrite of already present scheme
   "overwriteAlreadyGeneratedSchemes": false,
-  # This allow to have more info in the console for debug purpose
   "verbose": true
 }
 ```
 
+To run it right click on the package you want to run it on.
+It will propose you to  
+At first lunch it will ask for permission to write files into the schemesDirectory. Say yes
 Then in xcode go on the target in the side panel you want to re-generate the schemes right click on SchemeGeneratorPlugin and after it running you can restart xcode to see all you schemes updated.
 
 Have fun

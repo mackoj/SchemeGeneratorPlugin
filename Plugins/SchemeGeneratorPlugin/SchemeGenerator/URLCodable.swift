@@ -16,10 +16,10 @@ extension KeyedDecodingContainer {
 
 extension KeyedEncodingContainer {
   public mutating func encode(_ value: URL, forKey key: KeyedEncodingContainer<K>.Key) throws {
-    try self.encode(value.absoluteString, forKey: key)
+    try self.encode(value.path, forKey: key)
   }
   
   public mutating func encodeIfPresent(_ value: URL?, forKey key: KeyedEncodingContainer<K>.Key) throws {
-    try self.encodeIfPresent(value?.absoluteString, forKey: key)
+    try self.encodeIfPresent(value?.path, forKey: key)
   }
 }

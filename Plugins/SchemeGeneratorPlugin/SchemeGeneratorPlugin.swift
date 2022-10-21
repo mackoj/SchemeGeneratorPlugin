@@ -8,12 +8,25 @@ struct SchemeGeneratorPlugin: CommandPlugin {
     let productNames = context.package.products.map(\.name)
     let packageTempFolder = URL(fileURLWithPath: context.pluginWorkDirectory.string)
     let packageDirectory = URL(fileURLWithPath: context.package.directory.string)
-    let configurationFileName = arguments.first ?? "conf_scheme_generator.json"
+    let configurationFileName = (arguments.first != nil && arguments.first!.isEmpty == false) ? arguments.first! : "conf_scheme_generator.json"
     let configurationFileURL = packageDirectory.appendingPathComponent(configurationFileName)
     
     if FileManager.default.fileExists(atPath: configurationFileURL.path) == false {
       Diagnostics.emit(.error, "Please add a configuration file at \(configurationFileURL.path)(example: https://github.com/mackoj/SchemeGeneratorPlugin/blob/main/conf_scheme_generator.json).")
-      return
+      Diagnostics.emit(.error, "We will generate a default one for you but you will need to set the schemesDirectory.")
+      var defaultConf: Data!
+      do {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        defaultConf = try encoder.encode(SchemeGeneratorConfiguration())
+      } catch {
+        Diagnostics.emit(.error, "Failed to encode a default configuration.")
+      }
+      do {
+        try defaultConf.write(to: configurationFileURL)
+      } catch {
+        Diagnostics.emit(.error, "Failed to encode write a default configuration at \(configurationFileURL.path)")
+      }
     }
 
     if productNames.isEmpty {
