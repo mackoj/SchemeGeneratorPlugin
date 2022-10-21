@@ -8,10 +8,11 @@ struct SchemeGeneratorPlugin: CommandPlugin {
     let productNames = context.package.products.map(\.name)
     let packageTempFolder = URL(fileURLWithPath: context.pluginWorkDirectory.string)
     let packageDirectory = URL(fileURLWithPath: context.package.directory.string)
-    let configurationFileURL = packageDirectory.appendingPathComponent("scheme_generator.yaml")
+    let configurationFileName = arguments.first ?? "conf_scheme_generator.json"
+    let configurationFileURL = packageDirectory.appendingPathComponent(configurationFileName)
     
     if FileManager.default.fileExists(atPath: configurationFileURL.path) == false {
-      Diagnostics.emit(.error, "Please add a configuration file at \(configurationFileURL.path)(example: https://github.com/mackoj/SchemeGeneratorPlugin/blob/main/scheme_generator.yaml).")
+      Diagnostics.emit(.error, "Please add a configuration file at \(configurationFileURL.path)(example: https://github.com/mackoj/SchemeGeneratorPlugin/blob/main/conf_scheme_generator.json).")
       return
     }
 
@@ -46,15 +47,7 @@ struct SchemeGeneratorPlugin: CommandPlugin {
       Diagnostics.emit(.error, "Failed to write temporary product list in \(productNamesFileURL.path).")
     }
 
-    try generateSchemes(
-      context: context,
-      arguments: [
-        "--configuration-file-url",
-        configurationFileURL.path,
-        "--product-names-file-url",
-        productNamesFileURL.path,
-      ]
-    )
+    SchemeGenerator.process(configurationFileURL, productNamesFileURL)
 
     Diagnostics.emit(.remark, "Finished")
   }

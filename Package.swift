@@ -10,11 +10,6 @@ let package = Package(
     .plugin(name: "SchemeGeneratorPlugin", targets: ["SchemeGeneratorPlugin"]),
   ],
   targets: [
-    .binaryTarget(
-      name: "scheme-generator",
-      url: "https://github.com/mackoj/SchemeGenerator/releases/download/0.4.0/scheme-generator.artifactbundle.zip",
-      checksum: "e5e6d3d66419d2d09215c572fd11432f151889ff307c46410c5a2bc1fbaadf97"
-    ),
     .plugin(
       name: "SchemeGeneratorPlugin",
       capability: .command(
@@ -25,10 +20,7 @@ let package = Package(
         permissions: [
           .writeToPackageDirectory(reason: "This plug-in need to update the schemes in the schemesDirectory folder definied in your configuration file."),
         ]
-      ),
-      dependencies: [
-        .target(name: "scheme-generator")
-      ]
+      )
     ),
     //    .testTarget(
     //      name: "SchemeGeneratorPluginTests",
