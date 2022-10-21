@@ -30,6 +30,6 @@ It will propose you to run it you can provide an optional argument that will all
 
 At first lunch it will ask for permission to write files into the schemesDirectory in order for it to work you have to say yes.
 
-After the run you can restart xcode to see all you schemes updated.
+If the `schemesDirectory` point to inside a workspace `project.xcworkspace/xcshareddata/xcschemes` you will need to restart xcode to see all you schemes updated.
 
 Have fun
