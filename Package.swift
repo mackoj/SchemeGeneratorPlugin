@@ -9,10 +9,6 @@ let package = Package(
   products: [
     .plugin(name: "SchemeGeneratorPlugin", targets: ["SchemeGeneratorPlugin"]),
   ],
-  dependencies: [
-//    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.2"),
-//    .package(url: "https://github.com/mackoj/SchemeGenerator.git", from: "0.3.0"),
-  ],
   targets: [
     .binaryTarget(
       name: "scheme-generator",
@@ -24,14 +20,13 @@ let package = Package(
       capability: .command(
         intent: .custom(
           verb: "scheme-generator",
-          description: "Je ne sais pas vraiment quoi mettre ici non plus"
+          description: "This tool generate the schemes."
         ),
         permissions: [
-          .writeToPackageDirectory(reason: "This plug-in need to update the scheme in the schemesDirectory folder definied in the configuration file."),
+          .writeToPackageDirectory(reason: "This plug-in need to update the schemes in the schemesDirectory folder definied in your configuration file."),
         ]
       ),
       dependencies: [
-//        "SchemeGenerator",
         .target(name: "scheme-generator")
       ]
     ),
