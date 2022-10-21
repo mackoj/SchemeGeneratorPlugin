@@ -23,8 +23,13 @@ This file contain theses keys:
 ```
 
 To run it right click on the package you want to run it on.
-It will propose you to  
-At first lunch it will ask for permission to write files into the schemesDirectory. Say yes
-Then in xcode go on the target in the side panel you want to re-generate the schemes right click on SchemeGeneratorPlugin and after it running you can restart xcode to see all you schemes updated.
+![Capture d’écran 2022-10-21 à 13 16 35](https://user-images.githubusercontent.com/661647/197189715-d810a52d-ce88-4371-9c9d-09d6d41fe883.png)
+
+It will propose you to run it you can provide an optional argument that will allow you to change the name of the configuration file.
+![Capture d’écran 2022-10-21 à 13 38 29](https://user-images.githubusercontent.com/661647/197189807-327b51b5-5f5b-4162-a433-a4c3215e67ec.png)
+
+At first lunch it will ask for permission to write files into the schemesDirectory in order for it to work you have to say yes.
+
+After the run you can restart xcode to see all you schemes updated.
 
 Have fun
