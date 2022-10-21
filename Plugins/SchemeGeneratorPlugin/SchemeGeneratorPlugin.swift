@@ -11,33 +11,51 @@ struct SchemeGeneratorPlugin: CommandPlugin {
     let configurationFileURL = packageDirectory.appendingPathComponent("scheme_generator.yaml")
     
     if FileManager.default.fileExists(atPath: configurationFileURL.path) == false {
-      Diagnostics.emit(.error, "Please add a configuration file at \(configurationFileURL.path)")
+      Diagnostics.emit(.error, "Please add a configuration file at \(configurationFileURL.path)(example: https://github.com/mackoj/SchemeGeneratorPlugin/blob/main/scheme_generator.yaml).")
+      return
     }
-    
+
+    if productNames.isEmpty {
+      Diagnostics.emit(.warning, "No products found.")
+      return
+    }
+    Diagnostics.emit(.remark, "Found \(productNames.count) products.")
+
     guard let data = productNames
       .joined(separator: "\n")
       .data(using: .utf8)
-    else { return }
+    else {
+      Diagnostics.emit(.error, "Failed to convert data.")
+      return
+    }
     
     let hash = SHA256.hash(data: data)
       .compactMap { String(format: "%02x", $0) }
       .joined()
-    
-    Diagnostics.emit(.remark, "packageTempFolder: \(packageTempFolder.path)")
 
     let productNamesFileURL = packageTempFolder.appendingPathComponent(hash)
-    if FileManager.default.fileExists(atPath: packageTempFolder.path) { return }
-    
-    try data.write(to: packageTempFolder)
+
+    if FileManager.default.fileExists(atPath: productNamesFileURL.path) {
+      Diagnostics.emit(.remark, "There is no change in products list.")
+      return
+    }
+
+    do {
+      try data.write(to: productNamesFileURL)
+    } catch {
+      Diagnostics.emit(.error, "Failed to write temporary product list in \(productNamesFileURL.path).")
+    }
 
     try generateSchemes(
       context: context,
       arguments: [
-        "--configuration-file-url \"\(configurationFileURL.path)\"",
-        "--product-names-file-url \"\(productNamesFileURL.path)\"",
+        "--configuration-file-url",
+        configurationFileURL.path,
+        "--product-names-file-url",
+        productNamesFileURL.path,
       ]
     )
-    
+
     Diagnostics.emit(.remark, "Finished")
   }
 }

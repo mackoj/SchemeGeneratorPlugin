@@ -5,25 +5,25 @@ import PackageDescription
 
 let package = Package(
   name: "SchemeGeneratorPlugin",
+  platforms: [.macOS(.v12)],
   products: [
     .plugin(name: "SchemeGeneratorPlugin", targets: ["SchemeGeneratorPlugin"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.2"),
-    .package(url: "https://github.com/mackoj/SchemeGenerator.git", from: "0.3.0"),
+//    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.2"),
+//    .package(url: "https://github.com/mackoj/SchemeGenerator.git", from: "0.3.0"),
   ],
   targets: [
     .binaryTarget(
       name: "scheme-generator",
-      url: "https://github.com/mackoj/SchemeGenerator/releases/download/0.3.0/scheme-generator.zip",
-      checksum: "6002c6bb6730c58af2a683bbe8d5e949d54528b932271608fd53ff193e5ef814"
+      url: "https://github.com/mackoj/SchemeGenerator/releases/download/0.3.0/scheme-generator.artifactbundle.zip",
+      checksum: "80767ae49f38b46ed23e76dca668599a7d2b4b86cb823842967391ffb04b131f"
     ),
     .plugin(
       name: "SchemeGeneratorPlugin",
-      //      capability: .command(intent: .sourceCodeFormatting()),
       capability: .command(
         intent: .custom(
-          verb: "Je ne sais pas vraiment quoi mettre ici",
+          verb: "scheme-generator",
           description: "Je ne sais pas vraiment quoi mettre ici non plus"
         ),
         permissions: [
@@ -31,6 +31,7 @@ let package = Package(
         ]
       ),
       dependencies: [
+//        "SchemeGenerator",
         .target(name: "scheme-generator")
       ]
     ),
