@@ -15,7 +15,7 @@ let package = Package(
       capability: .command(
         intent: .custom(
           verb: "scheme-generator",
-          description: "This tool generate the schemes."
+          description: "Generate Xcode Schemes based on Package.swift products and conf_scheme_generator.json"
         ),
         permissions: [
           .writeToPackageDirectory(reason: "This plug-in need to update the schemes in the schemesDirectory folder definied in your configuration file."),
