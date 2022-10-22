@@ -1,5 +1,6 @@
 {
-  "schemesDirectory": "/Users/mackoj/Developer/github/SchemeGeneratorPlugin/Generated",
+  "schemesDirectory": "Generated/",
+  "excludedSchemes": [],
   "removeNotGeneratedSchemes": true,
   "overwriteAlreadyGeneratedSchemes": false,
   "verbose": true
