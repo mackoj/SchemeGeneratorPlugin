@@ -9,15 +9,15 @@ Add to your dependencies `.package(url: "https://github.com/mackoj/SchemeGenerat
 
 To use it you have to set a configuration file at the root of your project named `schemeGenerator.json`.
 This file contain theses keys:
-- schemesDirectory: A string that represent where the schemes will be saved
+- schemesDirectory: A string that represent where the schemes will be saved(if you use TCA you can put it in workspace)
 - removeNotGeneratedSchemes: A bool that represent if it should remove schemes that are no longer in Package.swift
 - overwriteAlreadyGeneratedSchemes: A bool that represent if it should force the overwrite of schemes already present scheme
 - excludedSchemes: A Array of String that represent the **name** of the schemes files that already exist and should not be processed 
 - verbose: A bool that represent if it should print more information in the console
 ```json
 {
-  "schemesDirectory": "",
-  "excludedSchemes": [],
+  "schemesDirectory": "Project/project.xcworkspace/xcshareddata/xcschemes",
+  "excludedSchemes": ["Target1Tests", "Target2Tests"],
   "removeNotGeneratedSchemes": true,
   "overwriteAlreadyGeneratedSchemes": false,
   "verbose": true
