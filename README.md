@@ -7,7 +7,7 @@ This is very usefull when using TCA or any SPM based project.
 
 Add to your dependencies `.package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.4.2"),`.
 
-To use it you have to set a configuration file at the root of your project named `conf_scheme_generator.json`.
+To use it you have to set a configuration file at the root of your project named `schemeGenerator.json`.
 This file contain theses keys:
 - schemesDirectory: A string that represent where the schemes will be saved
 - removeNotGeneratedSchemes: A bool that represent if it should remove schemes that are no longer in Package.swift
