@@ -85,8 +85,8 @@ public struct SchemeGenerator {
 
   private static func createDefaultConfiguration(_ configurationFileURL: FileURL) {
     if FileManager.default.fileExists(atPath: configurationFileURL.path) == false {
-      Diagnostics.emit(.error, "Please add a configuration file at \(configurationFileURL.path)(example: https://github.com/mackoj/SchemeGeneratorPlugin/blob/main/schemeGenerator.json).")
-      Diagnostics.emit(.error, "We will generate a default one for you but you will need to set the schemesDirectory.")
+      Diagnostics.emit(.error, "Missing a configuration file at \(configurationFileURL.path)(example: https://github.com/mackoj/SchemeGeneratorPlugin/blob/main/schemeGenerator.json).")
+      Diagnostics.emit(.error, "We will generate a default one for you but you will need to set it schemesDirectory value.")
       var defaultConf: Data!
       do {
         let encoder = JSONEncoder()
