@@ -10,15 +10,18 @@ public struct SchemeGenerator {
     var toolConfig = getDefaultConfigurationName(toolConfigFileURL)
     
     /// Prepare configuration
-    let configurationFileURL = getConfigurationFileURL(packageDirectory, arguments)
+    toolConfig = updateDefaultConfigFileName(arguments, toolConfig)
+    saveToolConfig(toolConfig, toolConfigFileURL)
+    let configurationFileURL = getConfigurationFileURL(packageDirectory, arguments, toolConfig.defaultConfigFileName)
     if FileManager.default.fileExists(atPath: configurationFileURL.path) == false {
       createDefaultConfiguration(configurationFileURL)
     }
     let config = loadConfiguration(configurationFileURL)
     validateConfiguration(config, configurationFileURL)
     
-    if config.verbose { print("toolConfigFileURL:", toolConfigFileURL.path) }
-    
+//    if config.verbose { print("toolConfigFileURL:", toolConfigFileURL.path) }
+    if config.verbose { print(toolConfig) }
+
     /// Prepare productNames
     toolConfig = testProductNamesContent(productNames, packageTempFolder, toolConfig)
     saveToolConfig(toolConfig, toolConfigFileURL)
@@ -35,7 +38,7 @@ public struct SchemeGenerator {
   
   // MARK: - Private
 
-  // MARK: Configuration
+  // MARK: Tool Configuration
   private static func saveToolConfig(_ toolConfig: ToolConfiguration, _ toolConfigFileURL: FileURL) {
     do {
       let data = try JSONEncoder().encode(toolConfig)
@@ -59,9 +62,11 @@ public struct SchemeGenerator {
     saveToolConfig(toolConfig, toolConfigFileURL)
     return toolConfig
   }
-  
-  private static func getConfigurationFileURL(_ packageDirectory: FileURL, _ arguments: [String]) -> FileURL {
-    var configurationFileName = "schemeGenerator.json"
+
+  // MARK: Configuration
+  private static func updateDefaultConfigFileName(_ arguments: [String], _ toolConfig: ToolConfiguration) -> ToolConfiguration {
+    var toolConfig = toolConfig
+    var configurationFileName = toolConfig.defaultConfigFileName
     if let cf = arguments.firstIndex(of: "--confFile") {
       let param = arguments.index(after: cf)
       if param != cf {
@@ -69,6 +74,11 @@ public struct SchemeGenerator {
         configurationFileName = confFile
       }
     }
+    toolConfig.defaultConfigFileName = configurationFileName
+    return toolConfig
+  }
+  
+  private static func getConfigurationFileURL(_ packageDirectory: FileURL, _ arguments: [String], _ configurationFileName: String) -> FileURL {
     let configurationFileURL = packageDirectory.appendingPathComponent(configurationFileName)
     return configurationFileURL
   }
