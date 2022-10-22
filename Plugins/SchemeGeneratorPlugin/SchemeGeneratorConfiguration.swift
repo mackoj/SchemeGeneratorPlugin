@@ -10,7 +10,6 @@ public struct SchemeGeneratorConfiguration: Codable, CustomStringConvertible {
   public var description: String {
     """
 SchemeGeneratorConfiguration:
------------------------------
 schemesDirectory: \(schemesDirectory?.path ?? "nil")
 verbose: \(verbose)
 overwriteAlreadyGeneratedSchemes: \(overwriteAlreadyGeneratedSchemes)
