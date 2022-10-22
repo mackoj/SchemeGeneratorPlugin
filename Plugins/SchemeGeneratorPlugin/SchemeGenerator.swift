@@ -5,6 +5,10 @@ import CryptoKit
 public struct SchemeGenerator {
   // MARK: - Public
   public static func generateSchemes(_ packageDirectory: FileURL, _ arguments: [String], _ productNames: [String], _ packageTempFolder: FileURL) {
+    /// Load Tool Configuration
+    let toolConfigFileURL: FileURL = packageTempFolder.appendingPathComponent("config.json")
+    var toolConfig = getDefaultConfigurationName(toolConfigFileURL)
+    
     /// Prepare configuration
     let configurationFileURL = getConfigurationFileURL(packageDirectory, arguments)
     if FileManager.default.fileExists(atPath: configurationFileURL.path) == false {
@@ -13,8 +17,12 @@ public struct SchemeGenerator {
     let config = loadConfiguration(configurationFileURL)
     validateConfiguration(config, configurationFileURL)
     
+    if config.verbose { print("toolConfigFileURL:", toolConfigFileURL.path) }
+    
     /// Prepare productNames
-    testProductNamesContent(productNames, packageTempFolder)
+    toolConfig = testProductNamesContent(productNames, packageTempFolder, toolConfig)
+    saveToolConfig(toolConfig, toolConfigFileURL)
+
     let filteredProductNames = filterUsefullProducts(productNames, config)
     if config.verbose {
       print("Schemes that will be created:")
@@ -22,12 +30,36 @@ public struct SchemeGenerator {
     }
     
     // Generate Schemes Files
-    generateSchemesFiles(filteredProductNames, config)
+    generateSchemesFiles(filteredProductNames, config)    
   }
   
   // MARK: - Private
 
   // MARK: Configuration
+  private static func saveToolConfig(_ toolConfig: ToolConfiguration, _ toolConfigFileURL: FileURL) {
+    do {
+      let data = try JSONEncoder().encode(toolConfig)
+      try data.write(to: toolConfigFileURL, options: [.atomic])
+    } catch {
+      Diagnostics.emit(.warning, "Failed to write ToolConfiguration file.")
+    }
+  }
+  
+  private static func getDefaultConfigurationName(_ toolConfigFileURL: FileURL) -> ToolConfiguration {
+    if FileManager.default.fileExists(atPath: toolConfigFileURL.path) {
+      do {
+        let data = try Data(contentsOf: toolConfigFileURL)
+        let toolConfig = try JSONDecoder().decode(ToolConfiguration.self, from: data)
+        return toolConfig
+      } catch {
+        Diagnostics.emit(.error, "Failed to load ToolConfiguration file.")
+      }
+    }
+    let toolConfig = ToolConfiguration()
+    saveToolConfig(toolConfig, toolConfigFileURL)
+    return toolConfig
+  }
+  
   private static func getConfigurationFileURL(_ packageDirectory: FileURL, _ arguments: [String]) -> FileURL {
     var configurationFileName = "schemeGenerator.json"
     if let cf = arguments.firstIndex(of: "--confFile") {
@@ -54,7 +86,7 @@ public struct SchemeGenerator {
         fatalError(.error, "Failed to encode a default configuration.")
       }
       do {
-        try defaultConf.write(to: configurationFileURL)
+        try defaultConf.write(to: configurationFileURL, options: [.atomic])
       } catch {
         fatalError(.error, "Failed to encode write a default configuration at \(configurationFileURL.path)")
       }
@@ -80,7 +112,8 @@ public struct SchemeGenerator {
   }
   
   // MARK: Product Names
-  private static func testProductNamesContent(_ productNames: [String], _ packageTempFolder: FileURL) {
+  private static func testProductNamesContent(_ productNames: [String], _ packageTempFolder: FileURL, _ toolConfig: ToolConfiguration) -> ToolConfiguration {
+    var toolConfig = toolConfig
     if productNames.isEmpty {
       fatalError(.warning, "No products found.")
     }
@@ -97,17 +130,12 @@ public struct SchemeGenerator {
       .compactMap { String(format: "%02x", $0) }
       .joined()
     
-    let productNamesFileURL = packageTempFolder.appendingPathComponent(hash)
-    
-    if FileManager.default.fileExists(atPath: productNamesFileURL.path) {
+    if toolConfig.lastProductNamesHash != hash {
+      toolConfig.lastProductNamesHash = hash
+    } else {
       fatalError(.remark, "There is no change in products list.")
     }
-    
-    do {
-      try Data().write(to: productNamesFileURL)
-    } catch {
-      fatalError(.error, "Failed to write temporary product list in \(productNamesFileURL.path).")
-    }
+    return toolConfig
   }
 
   private static func filterUsefullProducts(_ productNames: [String], _ config: SchemeGeneratorConfiguration) -> [String] {
@@ -115,7 +143,7 @@ public struct SchemeGenerator {
       do {
         try FileManager.default.createDirectory(at: config.schemesDirectory!, withIntermediateDirectories: true)
       } catch {
-        fatalError(.error, "Schemes output directory(\(config.schemesDirectory)) don't exist and failed to created it.")
+        fatalError(.error, "Schemes output directory(\(String(describing: config.schemesDirectory))) don't exist and failed to created it.")
       }
     }
     
@@ -132,7 +160,7 @@ public struct SchemeGenerator {
     }.map { $0.lastPathComponent.replacingOccurrences(of: ".\($0.pathExtension)", with: "") }
     
     var schemesSet = Set<String>(schemes)
-    var productNamesSet = Set<String>(productNames)
+    let productNamesSet = Set<String>(productNames)
     
     // exclude from processing schemes that already exist
     schemesSet.subtract(config.excludedSchemes)
