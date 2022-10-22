@@ -5,7 +5,7 @@ This is very usefull when using TCA or any SPM based project.
 
 ## Usage
 
-Add to your dependencies `.package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.4.2"),`.
+Add to your dependencies `.package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.5.2"),`.
 
 To use it you have to set a configuration file at the root of your project named `conf_scheme_generator.json`.
 This file contain theses keys:
