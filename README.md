@@ -16,6 +16,8 @@ Scheme Generator is a Swift Package Manager Plugin for quickly updating your Sch
 
 Add to your dependencies `.package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.5.5"),`.
 
+_This plugin works with Xcode 14.1 / 14.0._
+
 ## Basic usage
 
 The plugin will display messages and errors in **Xcode Report navigator**. 
