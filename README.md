@@ -1,5 +1,8 @@
 # Scheme Generator
 
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fmackoj%2FSchemeGeneratorPlugin%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/mackoj/SchemeGeneratorPlugin)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fmackoj%2FSchemeGeneratorPlugin%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/mackoj/SchemeGeneratorPlugin)
+
 Scheme Generator is a Swift Package Manager Plugin for quickly updating your Schemes files. It is great tool for project that are modularize or that use TCA.
 
 * [Installation](#installation)
