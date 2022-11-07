@@ -1,10 +1,29 @@
-# SchemeGeneratorPlugin
+# Scheme Generator
 
-This SwiftPacakgePlugin generate schemes for the selected modules. This is very usefull when using TCA or any SPM based project.
+Scheme Generator is a Swift Package Manager Plugin for quickly updating your Schemes files. It is great tool for project that are modularize or that use TCA.
 
-## Usage
+* [Installation](#installation)
+* [Basic usage](#basic-usage)
+* [Configuration](#configuration)
+* [How does it works?](#how-does-it-works)
+
+## Installation
 
 Add to your dependencies `.package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.5.5"),`.
+
+## Basic usage
+
+The plugin will display message and errors in **Xcode Report navigator**. 
+
+| step | description | img |
+| --- | --- | --- |
+| 0 | To run it right click on the package you want to run it on. | ![Capture d’écran 2022-10-21 à 13 16 35](https://user-images.githubusercontent.com/661647/197189715-d810a52d-ce88-4371-9c9d-09d6d41fe883.png) |
+| 1 | It will propose you to run it you can provide an optional argument(`--confFile newName.json`) that will allow you to change the name of the configuration file. Once change the new configuration file name will be stored | ![Capture d’écran 2022-10-21 à 13 38 29](https://user-images.githubusercontent.com/661647/197189807-327b51b5-5f5b-4162-a433-a4c3215e67ec.png) |
+| 2 | At first lunch it will ask for permission to write files into the schemesDirectory in order for it to work you have to say yes. | <img width="361" alt="Capture d’écran 2022-10-21 à 01 35 07" src="https://user-images.githubusercontent.com/661647/200274173-e3e1e1f7-9d93-4a5e-ac4e-062e6cbc5200.png"> |
+
+_If the `schemesDirectory` point to inside a workspace `project.xcworkspace/xcshareddata/xcschemes` you might need to restart xcode to see all you schemes updated._
+
+## Configuration
 
 To use it you have to set a configuration file at the root of your project named `schemeGenerator.json`.
 This file contain theses keys:
@@ -23,12 +42,10 @@ This file contain theses keys:
 }
 ```
 
-| step | description | img |
-| --- | --- | --- |
-| 0 | To run it right click on the package you want to run it on. | ![Capture d’écran 2022-10-21 à 13 16 35](https://user-images.githubusercontent.com/661647/197189715-d810a52d-ce88-4371-9c9d-09d6d41fe883.png) |
-| 1 | It will propose you to run it you can provide an optional argument(`--confFile newName.json`) that will allow you to change the name of the configuration file. Once change the new configuration file name will be stored | ![Capture d’écran 2022-10-21 à 13 38 29](https://user-images.githubusercontent.com/661647/197189807-327b51b5-5f5b-4162-a433-a4c3215e67ec.png) |
-| 2 | At first lunch it will ask for permission to write files into the schemesDirectory in order for it to work you have to say yes. | <img width="361" alt="Capture d’écran 2022-10-21 à 01 35 07" src="https://user-images.githubusercontent.com/661647/200274173-e3e1e1f7-9d93-4a5e-ac4e-062e6cbc5200.png"> |
+If a new configuration filename is used as explain in #basic-usage step 1. It will be save so that you will not be requeried to input the configuration fileName at each launch. 
 
-_If the `schemesDirectory` point to inside a workspace `project.xcworkspace/xcshareddata/xcschemes` you might need to restart xcode to see all you schemes updated._
+## How Does it Works?
 
-Have fun
+It load it's configuration to figure out `what` it can do and `where` to apply it. Then it load all the products from the `Package.swift`. Apply a filter in order to do just what is required then wrote the files in the `schemesDirectory`.
+
+The scheme are base from a template.
