@@ -8,7 +8,7 @@ Scheme Generator is a Swift Package Manager Plugin for quickly updating your Sch
 * [Installation](#installation)
 * [Basic usage](#basic-usage)
 * [Configuration](#configuration)
-* [How does it work?](#how-does-it-works)
+* [How does it work?](#how-does-it-work)
 
 ## Installation
 
@@ -48,7 +48,7 @@ This file contains these keys:
 
 If a new configuration filename is used as explained in #basic-usage step 1. It will be saved so that you will not be required to input the configuration fileName at each launch. 
 
-## How Does it Works?
+## How Does it Work?
 
 It loads its configuration to figure out `what` it can do and `where` to apply it. Then it loads all the products from the `Package.swift`. Apply a filter to do just what is required then wrote the files in the `schemesDirectory`.
 
