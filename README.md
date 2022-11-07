@@ -30,7 +30,7 @@ This file contain theses keys:
 - `schemesDirectory`: A string that represent where the schemes will be saved(if you use TCA you can put it in workspace)
 - `removeNotGeneratedSchemes`: A bool that represent if it should remove schemes that are no longer in Package.swift
 - `overwriteAlreadyGeneratedSchemes`: A bool that represent if it should force the overwrite of schemes already present scheme
-- `excludedSchemes`: A Array of String that represent the **name** of the schemes files that already exist and should not be processed 
+- `excludedSchemes`: An array of String that represent the **name** of the schemes files that already exist and should not be processed 
 - `verbose`: A bool that represent if it should print more information in the console
 
 ```json
