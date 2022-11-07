@@ -1,11 +1,10 @@
 # SchemeGeneratorPlugin
 
-This plugin allow to generate schemes automatically. 
-This is very usefull when using TCA or any SPM based project.
+This SwiftPacakgePlugin generate schemes for the selected modules. This is very usefull when using TCA or any SPM based project.
 
 ## Usage
 
-Add to your dependencies `.package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.5.4"),`.
+Add to your dependencies `.package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.5.5"),`.
 
 To use it you have to set a configuration file at the root of your project named `schemeGenerator.json`.
 This file contain theses keys:
@@ -24,14 +23,12 @@ This file contain theses keys:
 }
 ```
 
-To run it right click on the package you want to run it on.
-![Capture d’écran 2022-10-21 à 13 16 35](https://user-images.githubusercontent.com/661647/197189715-d810a52d-ce88-4371-9c9d-09d6d41fe883.png)
+| step | description | img |
+| --- | --- | --- |
+| 0 | To run it right click on the package you want to run it on. | ![Capture d’écran 2022-10-21 à 13 16 35](https://user-images.githubusercontent.com/661647/197189715-d810a52d-ce88-4371-9c9d-09d6d41fe883.png) |
+| 1 | It will propose you to run it you can provide an optional argument(`--confFile newName.json`) that will allow you to change the name of the configuration file. Once change the new configuration file name will be stored | ![Capture d’écran 2022-10-21 à 13 38 29](https://user-images.githubusercontent.com/661647/197189807-327b51b5-5f5b-4162-a433-a4c3215e67ec.png) |
+| 2 | At first lunch it will ask for permission to write files into the schemesDirectory in order for it to work you have to say yes. | <img width="361" alt="Capture d’écran 2022-10-21 à 01 35 07" src="https://user-images.githubusercontent.com/661647/200274173-e3e1e1f7-9d93-4a5e-ac4e-062e6cbc5200.png"> |
 
-It will propose you to run it you can provide an optional argument(`--confFile newName.json`) that will allow you to change the name of the configuration file.
-![Capture d’écran 2022-10-21 à 13 38 29](https://user-images.githubusercontent.com/661647/197189807-327b51b5-5f5b-4162-a433-a4c3215e67ec.png)
-
-At first lunch it will ask for permission to write files into the schemesDirectory in order for it to work you have to say yes.
-
-If the `schemesDirectory` point to inside a workspace `project.xcworkspace/xcshareddata/xcschemes` you will need to restart xcode to see all you schemes updated.
+_If the `schemesDirectory` point to inside a workspace `project.xcworkspace/xcshareddata/xcschemes` you might need to restart xcode to see all you schemes updated._
 
 Have fun
