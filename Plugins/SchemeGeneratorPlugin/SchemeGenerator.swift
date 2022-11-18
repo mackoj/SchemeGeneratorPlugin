@@ -23,7 +23,7 @@ public struct SchemeGenerator {
     if config.verbose { print(toolConfig) }
 
     /// Prepare productNames
-    toolConfig = testProductNamesContent(productNames, packageTempFolder, toolConfig)
+    toolConfig = testProductNamesContent(productNames, packageTempFolder, config, toolConfig)
     saveToolConfig(toolConfig, toolConfigFileURL)
 
     let filteredProductNames = filterUsefullProducts(productNames, config)
@@ -122,7 +122,7 @@ public struct SchemeGenerator {
   }
   
   // MARK: Product Names
-  private static func testProductNamesContent(_ productNames: [String], _ packageTempFolder: FileURL, _ toolConfig: ToolConfiguration) -> ToolConfiguration {
+  private static func testProductNamesContent(_ productNames: [String], _ packageTempFolder: FileURL, _ config: SchemeGeneratorConfiguration, _ toolConfig: ToolConfiguration) -> ToolConfiguration {
     var toolConfig = toolConfig
     if productNames.isEmpty {
       fatalError(.warning, "No products found.")
@@ -142,8 +142,10 @@ public struct SchemeGenerator {
     
     if toolConfig.lastProductNamesHash != hash {
       toolConfig.lastProductNamesHash = hash
-    } else {
+    } else if config.overwriteAlreadyGeneratedSchemes == false {
       fatalError(.remark, "There is no change in products list.")
+    } else {
+      print("Schemes will be overwritten")
     }
     return toolConfig
   }
@@ -179,7 +181,10 @@ public struct SchemeGenerator {
 
     // force overwrite already existing schemes
     if config.overwriteAlreadyGeneratedSchemes {
-      output.append(contentsOf: schemesSet.intersection(productNamesSet))
+      let toOverwrite = schemesSet.intersection(productNamesSet)
+      print("Schemes that will be overwriten:")
+      print(toOverwrite.joined(separator: "\n"))
+      output.append(contentsOf: toOverwrite)
     }
     
     // remove obsolete schemes
