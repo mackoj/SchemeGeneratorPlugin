@@ -2,6 +2,6 @@
   "schemesDirectory": "Generated/",
   "excludedSchemes": [],
   "removeNotGeneratedSchemes": true,
-  "overwriteAlreadyGeneratedSchemes": false,
+  "overwriteAlreadyGeneratedSchemes": true,
   "verbose": true
 }
