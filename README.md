@@ -30,7 +30,7 @@ The plugin will display messages and errors in **Xcode Report navigator**.
 
 _If the `schemesDirectory` point to inside a workspace `project.xcworkspace/xcshareddata/xcschemes` you might need to restart Xcode to see all your schemes updated._
 
-### CLI
+### How to use in CLI
 
 You can then invoke the plugin from the root of your repository like so:
 
