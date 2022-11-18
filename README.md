@@ -60,7 +60,7 @@ You can then invoke the plugin from the root of your repository like so:
 
 This will generate schemes for all compatible targets defined in your package and write them in `schemesDirectory`.
 
-Notice that the output path must also be passed to SwiftPM via the --allow-writing-to-directory option. Otherwise SwiftPM will throw an error as it's a sandbox violation for a plugin to write to a package directory without explicit permission.
+Notice that you must also passed `--allow-writing-to-directory` option to SwiftPM. Otherwise SwiftPM will throw an error as it's a sandbox violation for a plugin to write to a package directory without explicit permission.
 
 You can pass `--confFile newName.json` to `scheme-generator` in order to change the default path for the configuration. It will be saved so that you will not be required to input the configuration fileName at each launch.
 
