@@ -52,6 +52,18 @@ This file contains these keys:
 
 If a new configuration filename is used as explained in #basic-usage step 1. It will be saved so that you will not be required to input the configuration fileName at each launch. 
 
+### CLI
+
+You can then invoke the plugin from the root of your repository like so:
+
+`swift package plugin scheme-generator`
+
+This will generate schemes for all compatible targets defined in your package and write them in `schemesDirectory`.
+
+Notice that the output path must also be passed to SwiftPM via the --allow-writing-to-directory option. Otherwise SwiftPM will throw an error as it's a sandbox violation for a plugin to write to a package directory without explicit permission.
+
+You can pass `--confFile newName.json` to `scheme-generator` in order to change the default path for the configuration. It will be saved so that you will not be required to input the configuration fileName at each launch.
+
 ## How Does it Work?
 
 It loads its configuration to figure out `what` it can do and `where` to apply it. Then it loads all the products from the `Package.swift`. Apply a filter to do just what is required then wrote the files in the `schemesDirectory`.
