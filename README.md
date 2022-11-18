@@ -30,6 +30,18 @@ The plugin will display messages and errors in **Xcode Report navigator**.
 
 _If the `schemesDirectory` point to inside a workspace `project.xcworkspace/xcshareddata/xcschemes` you might need to restart Xcode to see all your schemes updated._
 
+### CLI
+
+You can then invoke the plugin from the root of your repository like so:
+
+`swift package plugin scheme-generator`
+
+This will generate schemes for all compatible targets defined in your package and write them in `schemesDirectory`.
+
+Notice that you must also passed `--allow-writing-to-directory` option to SwiftPM. Otherwise SwiftPM will throw an error as it's a sandbox violation for a plugin to write to a package directory without explicit permission.
+
+You can pass `--confFile newName.json` to `scheme-generator` in order to change the default path for the configuration. It will be saved so that you will not be required to input the configuration fileName at each launch.
+
 ## Configuration
 
 To use it you have to set a configuration file at the root of your project named `schemeGenerator.json`.
@@ -51,18 +63,6 @@ This file contains these keys:
 ```
 
 If a new configuration filename is used as explained in #basic-usage step 1. It will be saved so that you will not be required to input the configuration fileName at each launch. 
-
-### CLI
-
-You can then invoke the plugin from the root of your repository like so:
-
-`swift package plugin scheme-generator`
-
-This will generate schemes for all compatible targets defined in your package and write them in `schemesDirectory`.
-
-Notice that you must also passed `--allow-writing-to-directory` option to SwiftPM. Otherwise SwiftPM will throw an error as it's a sandbox violation for a plugin to write to a package directory without explicit permission.
-
-You can pass `--confFile newName.json` to `scheme-generator` in order to change the default path for the configuration. It will be saved so that you will not be required to input the configuration fileName at each launch.
 
 ## How Does it Work?
 
