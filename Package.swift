@@ -20,7 +20,8 @@ let package = Package(
         permissions: [
           .writeToPackageDirectory(reason: "This plug-in need to update the schemes in the schemesDirectory folder definied in your configuration file."),
         ]
-      )
+      ),
+      path: "Plugins/SchemeGeneratorPlugin"
     )
   ]
 )
