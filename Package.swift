@@ -7,11 +7,11 @@ let package = Package(
   name: "SchemeGeneratorPlugin",
   platforms: [.macOS(.v12)],
   products: [
-    .plugin(name: "SchemeGeneratorPlugin", targets: ["SchemeGeneratorPlugin"]),
+    .plugin(name: "SchemeGeneratorPlugin", targets: ["Scheme Generator"]),
   ],
   targets: [
     .plugin(
-      name: "SchemeGeneratorPlugin",
+      name: "Scheme Generator",
       capability: .command(
         intent: .custom(
           verb: "scheme-generator",
