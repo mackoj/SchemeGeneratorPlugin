@@ -5,6 +5,8 @@
 
 Scheme Generator is a Swift Package Manager Plugin for quickly updating your Schemes files. It is a great tool for a project that is modularized or that uses TCA.
 
+⚠️ This is in beta
+
 * [Installation](#installation)
 * [Basic usage](#basic-usage)
 * [Configuration](#configuration)
