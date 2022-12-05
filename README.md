@@ -10,6 +10,7 @@ Scheme Generator is a Swift Package Manager Plugin for quickly updating your Sch
 * [Installation](#installation)
 * [Basic usage](#basic-usage)
 * [Configuration](#configuration)
+* [CI](#ci)
 * [How does it work?](#how-does-it-work)
 
 ## Installation
@@ -63,6 +64,12 @@ This file contains these keys:
 ```
 
 If a new configuration filename is used as explained in #basic-usage step 1. It will be saved so that you will not be required to input the configuration fileName at each launch. 
+
+## CI
+
+You can use it in CI to automatically generate your schemes.
+
+`swift package plugin --allow-writing-to-package-directory scheme-generator`
 
 ## How Does it Work?
 
