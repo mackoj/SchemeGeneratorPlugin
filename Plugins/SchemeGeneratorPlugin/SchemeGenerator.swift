@@ -192,13 +192,12 @@ public struct SchemeGenerator {
         fatalError(.error, "Failed to create fileHandle for \(libraryName) at \(librarySchemeURL.path)")
       }
       
-      if let outputData = XcschemeTemplate.render(productName: libraryName).data(using: .utf8) {
-        do {
-          try libraryScemeFileHandle.write(contentsOf: outputData)
-        } catch {
-          let bf = ByteCountFormatter()
-          fatalError(.error, "Failed to write \(bf.string(fromByteCount: Int64(outputData.count))) in fileHandle for \(libraryName) at \(librarySchemeURL.path)")
-        }
+      let outputData = XcschemeTemplate.renderData(productName: libraryName)
+      do {
+        try libraryScemeFileHandle.write(contentsOf: outputData)
+      } catch {
+        let bf = ByteCountFormatter()
+        fatalError(.error, "Failed to write \(bf.string(fromByteCount: Int64(outputData.count))) in fileHandle for \(libraryName) at \(librarySchemeURL.path)")
       }
       do {
         try libraryScemeFileHandle.close()
