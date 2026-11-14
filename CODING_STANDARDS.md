@@ -10,7 +10,7 @@ Read during review. The mechanical part is enforced by `swift test --package-pat
   the configuration types. It imports only Foundation and CryptoKit and performs no I/O. `SchemeGenerator.swift` reads
   the configuration and the schemes directory, calls the core, then writes and deletes files.
 - **One copy of the core.** A plugin target cannot be imported, so `Tests/SchemeGeneratorTests/Core` and
-  `Benchmarks/Sources/SchemeGeneratorCore/Core` are symlinks to `Plugins/SchemeGeneratorPlugin/Core`. Never copy a file
+  `Benchmarks/Benchmarks/SchemeGeneratorBenchmarks/Core` are symlinks to `Plugins/SchemeGeneratorPlugin/Core`. Never copy a file
   instead of linking it; a new core file is picked up by both automatically.
 - **Report through Diagnostics.** Messages users must see go through `Diagnostics.emit`, which Xcode shows in the
   Report navigator. The plugin stops with the module's `fatalError(.error, "…")`, which emits first; a bare
