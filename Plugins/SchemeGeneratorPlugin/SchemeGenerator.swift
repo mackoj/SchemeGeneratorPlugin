@@ -1,6 +1,5 @@
 import Foundation
 import PackagePlugin
-import CryptoKit
 
 public struct SchemeGenerator {
   // MARK: - Public
@@ -66,15 +65,7 @@ public struct SchemeGenerator {
   // MARK: Configuration
   private static func updateDefaultConfigFileName(_ arguments: [String], _ toolConfig: ToolConfiguration) -> ToolConfiguration {
     var toolConfig = toolConfig
-    var configurationFileName = toolConfig.defaultConfigFileName
-    if let cf = arguments.firstIndex(of: "--confFile") {
-      let param = arguments.index(after: cf)
-      if param != cf {
-        let confFile = arguments[param]
-        configurationFileName = confFile
-      }
-    }
-    toolConfig.defaultConfigFileName = configurationFileName
+    toolConfig.defaultConfigFileName = PluginArguments.configurationFileName(arguments, current: toolConfig.defaultConfigFileName)
     return toolConfig
   }
   
@@ -129,16 +120,7 @@ public struct SchemeGenerator {
     }
     Diagnostics.emit(.remark, "Found \(productNames.count) products.")
     
-    guard let data = productNames
-      .joined(separator: "\n")
-      .data(using: .utf8)
-    else {
-      fatalError(.error, "Failed to convert data.")
-    }
-    
-    let hash = SHA256.hash(data: data)
-      .compactMap { String(format: "%02x", $0) }
-      .joined()
+    let hash = ProductNamesHash.hash(productNames)
     
     if toolConfig.lastProductNamesHash != hash {
       toolConfig.lastProductNamesHash = hash
@@ -167,49 +149,41 @@ public struct SchemeGenerator {
     } catch {
       fatalError(.error, "Failed to get contentsOfDirectory at \(config.schemesDirectory!.path)")
     }
-    let schemes = content.filter { fileURL in
-      fileURL.pathExtension == xcschemeExtension
-    }.map { $0.lastPathComponent.replacingOccurrences(of: ".\($0.pathExtension)", with: "") }
-    
-    var schemesSet = Set<String>(schemes)
-    let productNamesSet = Set<String>(productNames)
-    
-    // exclude from processing schemes that already exist
-    schemesSet.subtract(config.excludedSchemes)
-    
-    var output: [String] = Array(productNamesSet.subtracting(schemesSet))
+    let existingSchemes = content.compactMap { SchemeNaming.schemeName(fileName: $0.lastPathComponent) }
+    let plan = SchemePlan(
+      productNames: productNames,
+      existingSchemes: existingSchemes,
+      excludedSchemes: config.excludedSchemes,
+      overwriteAlreadyGeneratedSchemes: config.overwriteAlreadyGeneratedSchemes,
+      removeNotGeneratedSchemes: config.removeNotGeneratedSchemes
+    )
 
     // force overwrite already existing schemes
     if config.overwriteAlreadyGeneratedSchemes {
-      let toOverwrite = schemesSet.intersection(productNamesSet)
       print("Schemes that will be overwriten:")
-      print(toOverwrite.joined(separator: "\n"))
-      output.append(contentsOf: toOverwrite)
+      print(plan.toOverwrite.joined(separator: "\n"))
     }
     
     // remove obsolete schemes
-    if config.removeNotGeneratedSchemes {
-      let toRemoveSchemes = schemesSet.subtracting(productNamesSet)
-      if toRemoveSchemes.isEmpty == false, config.verbose {
-        print("Schemes that will be removed:")
-        print(toRemoveSchemes.joined(separator: "\n"))
-      }
-      for libraryName in toRemoveSchemes {
-        let schemeToDeleteURL = config.schemesDirectory!.appendingPathComponent("\(libraryName).\(xcschemeExtension)")
-        do {
-          try FileManager.default.removeItem(at: schemeToDeleteURL)
-        } catch {
-          Diagnostics.emit(.error, "Failed to delete scheme \(libraryName) at \(schemeToDeleteURL.path)")
-        }
+    if plan.toRemove.isEmpty == false, config.verbose {
+      print("Schemes that will be removed:")
+      print(plan.toRemove.joined(separator: "\n"))
+    }
+    for libraryName in plan.toRemove {
+      let schemeToDeleteURL = config.schemesDirectory!.appendingPathComponent(SchemeNaming.fileName(scheme: libraryName))
+      do {
+        try FileManager.default.removeItem(at: schemeToDeleteURL)
+      } catch {
+        Diagnostics.emit(.error, "Failed to delete scheme \(libraryName) at \(schemeToDeleteURL.path)")
       }
     }
-    return output
+    return plan.toWrite
   }
   
   // MARK: Generate Schemes
   private static func generateSchemesFiles(_ productNames: [String], _ config: SchemeGeneratorConfiguration) {
     for libraryName in productNames {
-      let librarySchemeURL = config.schemesDirectory!.appendingPathComponent("\(libraryName).\(xcschemeExtension)")
+      let librarySchemeURL = config.schemesDirectory!.appendingPathComponent(SchemeNaming.fileName(scheme: libraryName))
       FileManager.default.createFile(atPath: librarySchemeURL.path, contents: nil)
       var libraryScemeFileHandle: FileHandle
       do {
@@ -218,7 +192,7 @@ public struct SchemeGenerator {
         fatalError(.error, "Failed to create fileHandle for \(libraryName) at \(librarySchemeURL.path)")
       }
       
-      if let outputData = xcscheme.replacingOccurrences(of: "__LIBRARY__", with: libraryName).data(using: .utf8) {
+      if let outputData = XcschemeTemplate.render(productName: libraryName).data(using: .utf8) {
         do {
           try libraryScemeFileHandle.write(contentsOf: outputData)
         } catch {

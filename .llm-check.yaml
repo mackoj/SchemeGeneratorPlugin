@@ -1,0 +1,11 @@
+# swift-llm-check: what the rules in Architecture/ read. `Codebase()` finds the repository root here.
+# A name matches any folder or file; a path with a slash matches from the root.
+excludes:
+  - Architecture
+  - Benchmarks
+  - docs
+  - site
+  # Symlink to Plugins/SchemeGeneratorPlugin/Core, read once at its real path.
+  - Tests/SchemeGeneratorTests/Core
+# Folders ending in Tests hold test code.
+testSuffixes: [Tests]
