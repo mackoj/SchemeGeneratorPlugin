@@ -22,6 +22,12 @@ let package = Package(
         ]
       ),
       path: "Plugins/SchemeGeneratorPlugin"
-    )
+    ),
+    // The plugin's pure logic, tested on its own: Tests/SchemeGeneratorTests/Core is a symlink to
+    // Plugins/SchemeGeneratorPlugin/Core, since a test target cannot depend on a plugin target.
+    .testTarget(
+      name: "SchemeGeneratorTests",
+      path: "Tests/SchemeGeneratorTests"
+    ),
   ]
 )

@@ -1,6 +1,5 @@
 import Foundation
 import PackagePlugin
-import CryptoKit
 
 @main
 struct SchemeGeneratorPlugin: CommandPlugin {

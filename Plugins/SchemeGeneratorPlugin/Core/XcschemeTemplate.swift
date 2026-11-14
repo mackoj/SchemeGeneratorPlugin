@@ -70,3 +70,10 @@ let xcscheme = """
    </ArchiveAction>
 </Scheme>
 """
+
+enum XcschemeTemplate {
+  /// The scheme file for `productName`: the template with every `__LIBRARY__` replaced.
+  static func render(productName: String) -> String {
+    xcscheme.replacingOccurrences(of: "__LIBRARY__", with: productName)
+  }
+}
