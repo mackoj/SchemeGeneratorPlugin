@@ -2,8 +2,8 @@ import CryptoKit
 import Foundation
 
 // The plugin's decisions, kept free of I/O and of PackagePlugin so the test target and the benchmarks can compile
-// this folder as it is (Tests/SchemeGeneratorTests/Core and Benchmarks/Sources/SchemeGeneratorCore are symlinks to
-// it). SchemeGenerator.swift reads the disk, calls these functions and writes the result.
+// this folder as it is: Tests/SchemeGeneratorTests/Core and Benchmarks/Benchmarks/SchemeGeneratorBenchmarks/Core are
+// symlinks to it. SchemeGenerator.swift reads the disk, calls these functions and writes the result.
 
 /// Which scheme files to write and which to delete.
 struct SchemePlan: Equatable {
@@ -40,11 +40,13 @@ struct SchemePlan: Equatable {
 }
 
 enum SchemeNaming {
+  private static let schemeSuffix = ".\(xcschemeExtension)"
+
   /// The scheme name of a file in `schemesDirectory`, or nil when it is not an `.xcscheme` file.
   static func schemeName(fileName: String) -> String? {
-    let suffix = ".\(xcschemeExtension)"
-    guard fileName.hasSuffix(suffix), fileName.count > suffix.count else { return nil }
-    return String(fileName.dropLast(suffix.count))
+    // UTF-8 counts are O(1); `count` walks every Character. The suffix is ASCII, so both counts agree for it.
+    guard fileName.utf8.count > schemeSuffix.utf8.count, fileName.hasSuffix(schemeSuffix) else { return nil }
+    return String(fileName.dropLast(schemeSuffix.utf8.count))
   }
 
   /// The file name of the scheme for `productName`.
@@ -68,9 +70,15 @@ enum ProductNamesHash {
   /// The lowercase hex SHA-256 of the product names joined by newlines. Stored in the tool configuration to skip a
   /// run when the product list has not changed.
   static func hash(_ productNames: [String]) -> String {
-    let data = Data(productNames.joined(separator: "\n").utf8)
-    return SHA256.hash(data: data)
-      .compactMap { String(format: "%02x", $0) }
-      .joined()
+    let digest = SHA256.hash(data: Data(productNames.joined(separator: "\n").utf8))
+    var hex = [UInt8]()
+    hex.reserveCapacity(SHA256.byteCount * 2)
+    for byte in digest {
+      hex.append(hexDigits[Int(byte >> 4)])
+      hex.append(hexDigits[Int(byte & 0x0F)])
+    }
+    return String(decoding: hex, as: UTF8.self)
   }
+
+  private static let hexDigits = Array("0123456789abcdef".utf8)
 }
