@@ -8,3 +8,9 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 Generated/
+/Architecture/.build
+/Architecture/.swiftpm
+/Benchmarks/.build
+/Benchmarks/.swiftpm
+/Benchmarks/.benchmarkBaselines
+Package.resolved
