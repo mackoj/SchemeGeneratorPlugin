@@ -27,11 +27,11 @@ struct ArchitectureRules {
   @Test func testsUseSwiftTesting() throws {
     let tests = try Self.tests()
     #expect(tests.containing("import Testing").relativePaths.count >= 1)
-    expectNone(Detect.xcTestImports(in: tests), rule: .testsUseSwiftTesting)
+    expectNone(tests.xcTestImports, rule: .testsUseSwiftTesting)
   }
 
   @Test func testsAreNotDisabled() throws {
-    expectNone(Detect.disabledTests(in: try Self.tests()), rule: .testsAreNotDisabled)
+    expectNone(try Self.tests().disabledTests, rule: .testsAreNotDisabled)
   }
 }
 
