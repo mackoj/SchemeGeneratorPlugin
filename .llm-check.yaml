@@ -5,7 +5,5 @@ excludes:
   - Benchmarks
   - docs
   - site
-  # Symlink to Plugins/SchemeGeneratorPlugin/Core, read once at its real path.
-  - Tests/SchemeGeneratorTests/Core
 # Folders ending in Tests hold test code.
 testSuffixes: [Tests]
