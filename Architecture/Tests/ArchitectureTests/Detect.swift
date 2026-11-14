@@ -1,7 +1,7 @@
 import LLMCheck
 import SwiftSyntax
 
-/// The detectors, separate from the codebase so `DetectorTests` can run them on snippets.
+/// The repository-specific detectors (the shared ones are swift-llm-check built-ins), separate from the codebase so `DetectorTests` can run them on snippets.
 enum Detect {
   /// Types whose every use is I/O, process state or plugin output.
   static let impureTypes: Set<String> = [
@@ -39,18 +39,6 @@ enum Detect {
       let function = sequence(first: Syntax(call.node), next: \.parent)
         .lazy.compactMap { $0.as(FunctionDeclSyntax.self) }.first
       return function?.name.text != "fatalError"
-    }
-  }
-
-  /// `import XCTest`.
-  static func xcTestImports(in scope: Scope) -> [Match<ImportDeclSyntax>] {
-    scope.imports(of: "XCTest")
-  }
-
-  /// The `.disabled(…)` trait, wherever a test or suite takes it.
-  static func disabledTests(in scope: Scope) -> [Match<FunctionCallExprSyntax>] {
-    scope.calls(named: "disabled").filter { call in
-      call.node.receiver == nil && call.node.calledExpression.is(MemberAccessExprSyntax.self)
     }
   }
 }

@@ -29,6 +29,10 @@ jobs:
         run: scripts/smoke-test.sh
       - name: Architecture rules
         run: swift test --package-path Architecture
+      - name: Build benchmarks
+        env:
+          BENCHMARK_DISABLE_JEMALLOC: "true"
+        run: swift build --package-path Benchmarks
 
   actionlint:
     name: Workflow lint

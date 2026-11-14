@@ -1,4 +1,5 @@
 import Testing
+import CryptoKit
 import Foundation
 
 @Suite struct SchemePlanTests {
@@ -54,6 +55,8 @@ import Foundation
     #expect(SchemeNaming.schemeName(fileName: "My.Feature.xcscheme") == "My.Feature")
     #expect(SchemeNaming.schemeName(fileName: "README.md") == nil)
     #expect(SchemeNaming.schemeName(fileName: ".xcscheme") == nil)
+    #expect(SchemeNaming.schemeName(fileName: "Café.xcscheme") == "Café")
+    #expect(SchemeNaming.schemeName(fileName: "App.xcscheme.bak") == nil)
   }
 
   @Test func fileNameRoundTrips() {
@@ -82,6 +85,13 @@ import Foundation
       ProductNamesHash.hash(["A", "B"]) == "23519a43c66b4c342f25b32e09797ec5f3fc0be388cd8243fb3449afbdce4013")
     #expect(ProductNamesHash.hash(["A", "B"]) != ProductNamesHash.hash(["B", "A"]))
   }
+
+  @Test(arguments: [[], ["App"], ["Feature", "Café", "日本"], (0..<300).map { "Module\($0)" }])
+  func matchesTheFormatBasedEncoding(names: [String]) {
+    let reference = SHA256.hash(data: Data(names.joined(separator: "\n").utf8))
+      .map { String(format: "%02x", $0) }.joined()
+    #expect(ProductNamesHash.hash(names) == reference)
+  }
 }
 
 @Suite struct XcschemeTemplateTests {
@@ -91,6 +101,13 @@ import Foundation
     #expect(scheme.components(separatedBy: "BlueprintName = \"Feature\"").count == 3)
     #expect(scheme == xcscheme.replacingOccurrences(of: "__LIBRARY__", with: "Feature"))
     #expect(scheme.hasPrefix("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"))
+  }
+
+  @Test(arguments: ["", "A", "Café", "日本Module", "Has__LIBRARY__Inside"])
+  func matchesStringReplacement(productName: String) {
+    let reference = xcscheme.replacingOccurrences(of: "__LIBRARY__", with: productName)
+    #expect(XcschemeTemplate.render(productName: productName) == reference)
+    #expect(XcschemeTemplate.renderData(productName: productName) == reference.data(using: .utf8))
   }
 }
 

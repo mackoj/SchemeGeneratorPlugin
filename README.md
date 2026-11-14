@@ -1,23 +1,33 @@
 # Scheme Generator
 
+[![CI](https://github.com/mackoj/SchemeGeneratorPlugin/actions/workflows/ci.yml/badge.svg)](https://github.com/mackoj/SchemeGeneratorPlugin/actions/workflows/ci.yml)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fmackoj%2FSchemeGeneratorPlugin%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/mackoj/SchemeGeneratorPlugin)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fmackoj%2FSchemeGeneratorPlugin%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/mackoj/SchemeGeneratorPlugin)
 
-Scheme Generator is a Swift Package Manager Plugin for quickly updating your Schemes files. It is a great tool for a project that is modularized or that uses TCA.
+**[Website](https://mackoj.github.io/SchemeGeneratorPlugin/)** ·
+**[Performance](docs/performance.md)** ·
+**[Architecture rules](docs/architecture-rules.md)**
 
-⚠️ This is in beta
+Scheme Generator is a Swift Package Manager command plugin that writes a shared Xcode scheme (`.xcscheme`) for every
+product in your `Package.swift`, and removes the schemes of products that are gone. It is a great tool for a project
+that is modularized or that uses TCA.
 
 * [Installation](#installation)
 * [Basic usage](#basic-usage)
 * [Configuration](#configuration)
 * [CI](#ci)
 * [How does it work?](#how-does-it-work)
+* [Contributing](#contributing)
 
 ## Installation
 
-Add to your dependencies `.package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.5.5"),`.
+Add it to the dependencies of the package whose products need schemes:
 
-_This plugin works with Xcode 14.1 / 14.0._
+```swift
+.package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.5.8"),
+```
+
+_Requires Xcode 14 or later (swift-tools-version 5.7) on macOS 12 or later._
 
 ## Basic usage
 
@@ -35,11 +45,11 @@ _If the `schemesDirectory` point to inside a workspace `project.xcworkspace/xcsh
 
 You can then invoke the plugin from the root of your repository like so:
 
-`swift package plugin scheme-generator`
+`swift package --allow-writing-to-package-directory scheme-generator`
 
 This will generate schemes for all compatible targets defined in your package and write them in `schemesDirectory`.
 
-Notice that you must also passed `--allow-writing-to-directory` option to SwiftPM. Otherwise SwiftPM will throw an error as it's a sandbox violation for a plugin to write to a package directory without explicit permission.
+The `--allow-writing-to-package-directory` option is required: without it SwiftPM stops the plugin, since writing to the package directory without explicit permission is a sandbox violation.
 
 You can pass `--confFile newName.json` to `scheme-generator` in order to change the default path for the configuration. It will be saved so that you will not be required to input the configuration fileName at each launch.
 
@@ -50,7 +60,7 @@ This file contains these keys:
 - `schemesDirectory`: A string that represents where the schemes will be saved(if you use TCA you can put it in workspace)
 - `removeNotGeneratedSchemes`: A bool that represents if it should remove schemes that are no longer in Package.swift
 - `overwriteAlreadyGeneratedSchemes`: A bool that represents if it should force the overwrite of schemes already present scheme
-- `excludedSchemes`: An array of String that represents the **name** of the schemes files that already exist and should not be processed 
+- `excludedSchemes`: An array of String that represents the **name** of the schemes files that already exist and should never be removed
 - `verbose`: A bool that represents if it should print more information in the console
 
 ```json
@@ -69,10 +79,16 @@ If a new configuration filename is used as explained in #basic-usage step 1. It 
 
 You can use it in CI to automatically generate your schemes.
 
-`swift package plugin --allow-writing-to-package-directory scheme-generator`
+`swift package --allow-writing-to-package-directory scheme-generator`
 
 ## How Does it Work?
 
 It loads its configuration to figure out `what` it can do and `where` to apply it. Then it loads all the products from the `Package.swift`. Apply a filter to do just what is required then wrote the files in the `schemesDirectory`.
 
-The scheme is based on a template.
+The scheme is based on a template. A run with an unchanged product list stops early (set `overwriteAlreadyGeneratedSchemes` to force it).
+
+## Contributing
+
+- `swift build --build-tests && swift test` tests the plugin's pure core (`Plugins/SchemeGeneratorPlugin/Core`, shared with the test target through a symlink); `scripts/smoke-test.sh` runs the plugin on a sample package.
+- `swift test --package-path Architecture` checks the [architecture rules](docs/architecture-rules.md) written with [swift-llm-check](https://github.com/mackoj/swift-llm-check); see `CODING_STANDARDS.md`.
+- `swift package --package-path Benchmarks benchmark` runs the benchmarks; see [docs/performance.md](docs/performance.md).

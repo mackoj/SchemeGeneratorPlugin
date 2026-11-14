@@ -55,20 +55,4 @@ import Testing
         """, at: "Plugins/SchemeGeneratorPlugin/SchemeGenerator.swift"))
     #expect(found.map(\.location.line) == [1, 2])
   }
-
-  @Test func xcTestImportsAreFound() {
-    let found = Detect.xcTestImports(in: scope("import XCTest\nimport Testing", at: "Tests/T/A.swift"))
-    #expect(found.map(\.location.line) == [1])
-  }
-
-  @Test func disabledTestsAreFound() {
-    let found = Detect.disabledTests(
-      in: scope(
-        """
-        @Test(.disabled("flaky")) func a() {}
-        @Suite(.disabled()) struct B {}
-        @Test func c() { rule.disabled() }
-        """, at: "Tests/T/A.swift"))
-    #expect(found.map(\.location.line) == [1, 2])
-  }
 }
